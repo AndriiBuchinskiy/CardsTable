@@ -1,19 +1,10 @@
-const url = 'https://dummyjson.com/products/category/smartphones';
+import  axiosInstance from "/scripts/instanse.js";
 let list;
-
-if ("list" in localStorage)
-{
-    list = JSON.parse(localStorage.getItem("list"));
-}
-else {
-    axios.get(url)
-        .then((data) => {
-            console.log(data);
-            localStorage.setItem("list", JSON.stringify(data.data.products));
-            list = JSON.parse(localStorage.getItem("list"));
-        });
-}
-
+axiosInstance.get('/products/category/smartphones').then((data) => {
+     console.log(data);
+     localStorage.setItem("list",JSON.stringify(data.data.products))
+     list = JSON.parse(localStorage.getItem('list')) || [];
+});
 
 function WatchList()
 {
@@ -25,7 +16,6 @@ function WatchList()
     }
     else list.forEach((item) => {
         string += `<div class="card" style="width: 18rem;">
-
   <div class="card-body">
     <h5 class="card-title" id="title">${item.title}</h5>
     <p class="card-text" id ="description">${item.description}</p>
@@ -69,11 +59,9 @@ function UpdateCard()
             item.description = document.getElementById('update-input-description').value;
             item.price = document.getElementById('update-input-price').value;
             item.rating = document.getElementById('update-input-rating').value;
-
         }
         return item
     })
-
     localStorage.setItem("list",JSON.stringify(list));
     WatchList();
 }
@@ -81,10 +69,9 @@ function UpdateCard()
 function DeleteCard()
 {
     let id = document.getElementById('id-delete').value;
-    list = list.filter((item) => item.id !== +id);
+    axiosInstance = list.filter((item) => item.id !== +id);
     localStorage.setItem("list",JSON.stringify(list));
     WatchList();
-
 }
 function showUpdateModal(id)
 {
